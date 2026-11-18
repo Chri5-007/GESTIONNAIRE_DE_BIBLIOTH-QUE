@@ -1,0 +1,2 @@
+# Aucune dépendance externe : le projet n'utilise que la bibliothèque standard de Python (sqlite3).
+# Python 3.8 ou plus récent.

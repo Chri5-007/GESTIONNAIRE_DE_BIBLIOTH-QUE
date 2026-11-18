@@ -1,70 +1,127 @@
-# BiblioIIT Lite
+BiblioIIT
 
-Version simplifiée de BiblioIIT : application console de gestion de bibliothèque (Python, SQLite, architecture MVC).
+Application console de gestion de bibliothèque : livres, lecteurs, prêts et retours.
+Écrite en Python avec SQLite, sans aucune dépendance externe.
 
-## Prise en main rapide (aucune connaissance préalable)
+1. Lancer l’application
 
-1. **Installer Python 3.8 ou plus récent** depuis https://www.python.org/downloads/ (sous Windows, cocher « Add Python to PATH »).
-2. **Décompresser** le dossier `BiblioIIT_Lite`.
-3. **Lancer l'application**, dans un terminal ouvert dans le dossier : `python main.py`
-4. **Naviguer** : taper le numéro d'une option puis Entrée ; `0` pour revenir en arrière. L'option **9 (Aide)** du menu principal explique tout pas à pas.
+Ce qu’il faut : Python 3.8 ou plus récent (python.org/downloads). Sous Windows, cocher « Add Python to PATH » à l’installation.
 
-La base fournie (`biblioiit_lite.db`) est déjà remplie de **données fictives** : 58 livres, 55 lecteurs et 65 prêts (rendus, en cours et en retard), pour essayer sans risque.
+Vérifier l’installation :
 
-### Essayer en 1 minute
+bash
+python --version # Windows
+python3 --version # Linux / macOS
 
-| Je veux... | Je fais... |
-|---|---|
-| Voir les livres | menu `1` > `2` |
-| Chercher un livre | menu `1` > `3` > taper un titre, un auteur ou une catégorie |
-| Trouver un lecteur | menu `2` > `3` > taper un nom ou un numéro de carte (ex. `C001`) |
-| Prêter un livre | menu `3` > `1` > numéro de carte > ID du livre |
-| Enregistrer un retour | menu `3` > `2` > numéro de carte > ID du livre |
-| Voir les retards | menu `3` > `4` |
+Lancer (depuis le dossier du projet, celui qui contient main.py) :
 
-### Repartir d'une base vide ou refaire les données de démonstration
+bash
+python main.py # Windows
+python3 main.py # Linux / macOS
 
-1. Fermer l'application et supprimer le fichier `biblioiit_lite.db`.
-2. Pour une base vide : relancer simplement l'application.
-3. Pour recréer les données de démonstration : `python donnees_exemple.py`, puis lancer l'application.
+La base biblioiit_lite.db est déjà remplie de données fictives : 58 livres, 55 lecteurs et 65 prêts (rendus, en cours et en retard). Tu peux essayer sans risque.
 
-## Fonctionnalités
+2. Utiliser l’application
+   Tape le numéro d’une option, puis Entrée.
+   Tape 0 pour revenir en arrière ou quitter.
+   Ctrl+C quitte proprement l’application.
+   En cas de saisie incorrecte, un message d’erreur s’affiche : recommence.
+   L’option 9 du menu principal affiche l’aide dans l’application.
+   Menu principal
+   ============================================================
+   BIBLIOIIT LITE - GESTION DE BIBLIOTHÈQUE
+   ============================================================
+1. Livres
+1. Lecteurs
+1. Prêts et retours
+1. Aide : comment utiliser l'application
+1. Quitter
+   Les deux identifiants à connaître
+   Élément Identifiant Où le trouver
+   Livre ID (nombre, ex. 1) menu 1 > 2 (lister) ou 3 (rechercher)
+   Lecteur Numéro de carte (ex. C001) menu 2 > 2 (lister) ou 3 (rechercher)
 
-- **Livres** : ajouter, lister, rechercher, supprimer (avec nombre d'exemplaires et disponibilité)
-- **Lecteurs** : inscrire, lister, rechercher, supprimer
-- **Prêts** : emprunter, retourner, prêts en cours, prêts en retard
-- **Aide** intégrée (option 9 du menu principal)
+Ce sont ces deux identifiants qu’on saisit pour prêter et retourner un livre.
 
-## Paramètres de base
+Menus et options
+Menu Options
 
-Définis dans `config.py` :
+1. Livres 1 Ajouter · 2 Lister · 3 Rechercher (titre, auteur, ISBN, catégorie) · 4 Supprimer
+2. Lecteurs 1 Inscrire · 2 Lister · 3 Rechercher (nom, prénom, carte) · 4 Supprimer
+3. Prêts et retours 1 Emprunter · 2 Retourner · 3 Prêts en cours · 4 Prêts en retard
 
-| Paramètre | Valeur |
-|---|---|
-| Durée d'un prêt | 14 jours |
-| Livres max par lecteur | 3 |
+Dans la liste des livres, la colonne Total donne le nombre d’exemplaires et la colonne Dispo le nombre d’exemplaires actuellement sur les rayons.
 
-## Règles de gestion
+3. Exemples pas à pas
 
-- Un prêt est refusé s'il ne reste aucun exemplaire disponible, si le lecteur a déjà ce livre, ou s'il a atteint sa limite.
-- Un livre ou un lecteur ayant un historique de prêt ne peut pas être supprimé.
-- Un retour tardif affiche un avertissement (pas de suspension dans cette version).
+Prêter un livre
 
-## Architecture
+Menu 1 > 3, tape un titre pour trouver l’ID du livre.
+Menu 3 > 1.
+Saisis le numéro de carte du lecteur (ex. C001), puis l’ID du livre.
+L’application affiche la date de retour prévue.
 
-```
-BiblioIIT_Lite/
-├── main.py              point d'entrée
-├── config.py            paramètres de prêt
-├── donnees_exemple.py   génère les données de démonstration
-├── models/              Livre, Lecteur, Pret
-├── views/               menus, aide et affichage console
-├── controllers/         livres, lecteurs, prêts
-├── repositories/        accès SQLite
-├── database/            connexion et création des tables
-└── utils.py             fonctions sur les dates
-```
+Enregistrer un retour
 
-## Différences avec la version complète
+Menu 3 > 2.
+Saisis le numéro de carte du lecteur, puis l’ID du livre.
+Si le retour est tardif, un avertissement indique le nombre de jours de retard.
 
-La version Lite n'a pas : les exemplaires individuels (code d'inventaire, cote, état), les catégories de lecteurs et règles par catégorie, les suspensions après retard, les renouvellements, les réservations et les statistiques.
+Voir ce qui est sorti ou en retard
+
+Prêts en cours : menu 3 > 3
+Prêts en retard (avec les jours de retard) : menu 3 > 4
+
+Inscrire un lecteur
+
+Menu 2 > 1.
+Choisis un numéro de carte unique (ex. C056), puis le nom, le prénom et un contact (facultatif).
+
+Ajouter un livre
+
+Menu 1 > 1.
+Saisis le titre, l’auteur, l’ISBN et la catégorie (facultatifs) et le nombre d’exemplaires (1 par défaut). 4. Règles de gestion
+Règle Valeur
+Durée d’un prêt 14 jours
+Livres max par lecteur 3 en même temps
+Un prêt est refusé s’il ne reste aucun exemplaire disponible, si le lecteur a déjà ce livre en cours, ou s’il a atteint sa limite.
+Un livre ou un lecteur ayant un historique de prêt ne peut pas être supprimé.
+Un retour tardif affiche un avertissement, sans suspension dans cette version.
+Ces deux valeurs se modifient dans config.py (DUREE_PRET_JOURS, NB_MAX_LIVRES_PAR_LECTEUR). 5. Messages d’erreur courants
+Message Signification Que faire
+Lecteur introuvable. Le numéro de carte n’existe pas Vérifier dans menu 2 > 3
+Livre introuvable. L’ID n’existe pas Vérifier dans menu 1 > 3
+Aucun exemplaire disponible. Tous les exemplaires sont sortis Attendre un retour
+Ce lecteur a déjà emprunté ce livre. Prêt en cours du même livre Enregistrer d’abord le retour
+Limite atteinte : 3 livres maximum par lecteur. Trop de livres empruntés Enregistrer un retour
+Ce numéro de carte existe déjà. Carte déjà attribuée Choisir un autre numéro
+… a un historique de prêt : suppression impossible. Le livre ou le lecteur a déjà servi Rien : l’historique est conservé
+Aucun prêt en cours de ce livre pour ce lecteur. Retour sans prêt correspondant Vérifier le lecteur et l’ID dans les prêts en cours 6. Repartir de zéro ou refaire la démo
+
+Base vide
+
+Ferme l’application.
+Supprime le fichier biblioiit_lite.db.
+Relance python main.py : une base vide est recréée.
+
+Retrouver les données de démonstration
+
+Supprime biblioiit_lite.db.
+Lance python donnees_exemple.py.
+Lance l’application.
+
+Le script de démonstration s’arrête si la base contient déjà des données.
+
+7. Structure du projet
+   BiblioIIT_Lite/
+   ├── main.py point d'entrée
+   ├── config.py paramètres de prêt
+   ├── donnees_exemple.py génère les données de démonstration
+   ├── models/ Livre, Lecteur, Pret
+   ├── views/ menus, aide et affichage console
+   ├── controllers/ livres, lecteurs, prêts
+   ├── repositories/ accès SQLite
+   ├── database/ connexion et création des tables
+   └── utils.py fonctions sur les dates
+
+Architecture MVC : les vues affichent, les contrôleurs appliquent les règles, les repositories parlent à SQLite.
